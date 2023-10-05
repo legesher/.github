@@ -1,4 +1,4 @@
-<img src="../lib/images/Space-Wide@4x.png" align="center"/>
+<img src="lib/images/Space-Wide@4x.png" align="center"/>
 
 <h1 align="center">Legesher</h1>
 <blockquote align="center">💻 Code in any programming language using your native written language.</blockquote>
