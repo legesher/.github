@@ -1,4 +1,4 @@
-<img src="lib/images/Space-Wide@4x.png" align="center"/>
+<img src="https://github.com/legesher/.github/assets/7844510/7e47280c-4357-4f16-b9fb-f33e2205bd23" align="center"/>
 
 <h1 align="center">Legesher</h1>
 <blockquote align="center">💻 Code in any programming language using your native written language.</blockquote>
