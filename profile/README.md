@@ -37,7 +37,7 @@
 
 # Background
 
-Computer programming, as a global discipline, is predominantly English-based. However, only 4% of people in the world are native English speakers. Non-Native English Speakers (NNES) lack the support and resources to thrive mastering code in a foreign language.Legesher creates access for the other 96% of the world to code in the context of their native language. 
+Computer programming, as a global discipline, is predominantly English-based. However, only 4% of people in the world are native English speakers. Non-Native English Speakers (NNES) lack the support and resources to thrive mastering code in a foreign language. Legesher creates access for the other 96% of the world to code in the context of their native language. 
 
 # Introduction
 
@@ -48,13 +48,6 @@ Computer programming, as a global discipline, is predominantly English-based. Ho
 **Legesher's** products enable anyone to code in their native language. We built **Legesher** on top of [VS Code](https://code.visualstudio.com/), an open source text editor, and [Git w/ GitHub](https://github.com), a version control tool, in order to give users as much of a personal invitation to programming as we could.
 
 # Legesher Projects
-
-Legesher Developer Tools might be useful to you if:
-
-- you are a non-native english speaker
-- you are new to programming
-- you work on a team with non-native english speakers
-- you are a developer (simple enough)
 
 | Project                                                                                  | Purpose                                                                                                   |
 | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
