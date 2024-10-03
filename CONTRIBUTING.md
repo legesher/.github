@@ -8,21 +8,23 @@ First off, thank you for just being _here_. It's people like you who have a hear
 
 Here's a high level overview of what this guide entails. It is designed to be read and revisited as you become more involved with the project.
 
-- [Our Reason Why](#our-reason-why-)
-- [You Can Be a Part](#you-can-be-a-part-handshake)
-  - [Legesher Resources](#legesher-resources-)
-- [Contributing](#contributing-)
-  - [Ground Rules](#ground-rules-)
-  - [My First Contribution](#my-first-contribution-)
-- [Review Process](#review-process-)
-  - [Program Enhancements](#program-enhancements-)
-  - [Language Translations](#language-translations-loudspeaker)
-- [Style Guide](#style-guide-)
-  - [Commit Message Guidelines](#commit-message-guidelines-)
-- [Submitting Issues](#submitting-issues-%EF%B8%8F)
-  - [Bug Reports](#bug-reports-bug)
-  - [Feature or Enhancement Suggestions](#feature-or-enhancement-suggestions-)
-  - [Security Reports](#security-reports-police_car)
+- [Legesher's Contributing Guideline 👐](#legeshers-contributing-guideline-)
+    - [THANK YOU :heart:](#thank-you-heart)
+- [Our Reason Why 🔑](#our-reason-why-)
+    - [You Can Be A Part :handshake:](#you-can-be-a-part-handshake)
+    - [Legesher Resources 📚](#legesher-resources-)
+- [Contributing 📖](#contributing-)
+    - [Ground Rules 🎋](#ground-rules-)
+    - [My First Contribution ➕](#my-first-contribution-)
+- [Review Process 💚](#review-process-)
+    - [Program Enhancements ✅](#program-enhancements-)
+    - [Language Translations :loudspeaker:](#language-translations-loudspeaker)
+- [Style Guide 🎨](#style-guide-)
+    - [Commit Message Guidelines 📝](#commit-message-guidelines-)
+- [Submitting Issues ⚠️](#submitting-issues-️)
+    - [Bug Reports :bug:](#bug-reports-bug)
+    - [Feature or Enhancement Suggestions 🚀](#feature-or-enhancement-suggestions-)
+    - [Security Reports :police\_car:](#security-reports-police_car)
 
 ---
 
@@ -226,10 +228,10 @@ Answer [these questions](https://github.com/legesher/Legesher/blob/master/.githu
 
 ### Security Reports :police_car:
 
-If you find a security vulnerability, do NOT open an issue. Email <legesher@gmail.com> instead.
+If you find a security vulnerability, do NOT open an issue. Email <support@legesher.com> instead.
 In order to determine whether you are dealing with a security issue, ask yourself these two questions:
 
 - Can I access something that's not mine, or something I shouldn't have access to?
 - Can I disable something for other people?
 
-If the answer to either of those two questions are "yes", then you're probably dealing with a security issue. Note that even if you answer "no" to both questions, you may still be dealing with a security issue, so if you're unsure, just email us at <legesher@gmail.com>.
+If the answer to either of those two questions are "yes", then you're probably dealing with a security issue. Note that even if you answer "no" to both questions, you may still be dealing with a security issue, so if you're unsure, just email us at <support@legesher.com>.
