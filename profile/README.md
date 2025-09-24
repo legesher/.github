@@ -23,12 +23,12 @@
     <a href="https://github.com/legesher">
         <img src="https://img.shields.io/badge/-Contribute-black?style=flat-square&logo=github&logoColor=7ed2e7"
             alt="Contribute on Github"></a>
-    <a href="https://discord.gg/DkVjVDP">
-        <img src="https://img.shields.io/badge/-Chat-black?style=flat-square&logo=discord&logoColor=7ed2e7"
-            alt="chat on Discord"></a>
+    <a href="https://join.slack.com/t/legesher/shared_invite/zt-370xpp6b9-LYxWVIOF7ujVH5kYnwaGbQ">
+        <img src="https://img.shields.io/badge/-Community-black?style=flat-square&logo=slack&logoColor=7ed2e7"
+            alt="Join our community on Slack"></a>
     <a href="https://www.instagram.com/legesher/">
         <img src="https://img.shields.io/badge/-Connect-black?style=flat-square&logo=instagram&logoColor=7ed2e7"
-            alt="follow on Instagram"></a>
+            alt="Follow on Instagram"></a>
     <a href="https://mailchi.mp/083d8b2e0e12/legesher-landing-page">
         <img src="https://img.shields.io/badge/-Subscribe-black?style=flat-square&logo=mailchimp&logoColor=7ed2e7"
             alt="Subscribe on Mailchimp"></a>    
