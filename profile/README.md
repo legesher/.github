@@ -29,9 +29,9 @@
     <a href="https://www.instagram.com/legesher/">
         <img src="https://img.shields.io/badge/-Connect-black?style=flat-square&logo=instagram&logoColor=7ed2e7"
             alt="Follow on Instagram"></a>
-    <a href="https://mailchi.mp/083d8b2e0e12/legesher-landing-page">
-        <img src="https://img.shields.io/badge/-Subscribe-black?style=flat-square&logo=mailchimp&logoColor=7ed2e7"
-            alt="Subscribe on Mailchimp"></a>    
+    <a href="https://buttondown.com/legesher">
+        <img src="https://img.shields.io/badge/-Subscribe-black?style=flat-square&logo=minutemailer&logoColor=7ed2e7"
+            alt="Subscribe on Buttondown"></a>    
 </p>
 <!-- SOCIAL MEDIA -->
 
