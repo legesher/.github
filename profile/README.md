@@ -20,22 +20,22 @@
 </p>
 <!-- SOCIAL BADGES -->
 <p align="center">
+    <a href="https://buttondown.com/legesher">
+        <img src="https://img.shields.io/badge/-Newsletter-black?style=flat-square&logo=rss&logoColor=7ed2e7"
+            alt="Subscribe to Newsletter"></a>
+    <a href="https://legesher.io/go/slack">
+        <img src="https://img.shields.io/badge/-Join%20Slack-black?style=flat-square&logo=slack&logoColor=7ed2e7"
+            alt="Join Slack"></a>
     <a href="https://github.com/legesher">
         <img src="https://img.shields.io/badge/-Contribute-black?style=flat-square&logo=github&logoColor=7ed2e7"
-            alt="Contribute on Github"></a>
-    <a href="https://join.slack.com/t/legesher/shared_invite/zt-370xpp6b9-LYxWVIOF7ujVH5kYnwaGbQ">
-        <img src="https://img.shields.io/badge/-Community-black?style=flat-square&logo=slack&logoColor=7ed2e7"
-            alt="Join our community on Slack"></a>
+            alt="Contribute on GitHub"></a>
     <a href="https://www.instagram.com/legesher/">
-        <img src="https://img.shields.io/badge/-Connect-black?style=flat-square&logo=instagram&logoColor=7ed2e7"
+        <img src="https://img.shields.io/badge/-Follow-black?style=flat-square&logo=instagram&logoColor=7ed2e7"
             alt="Follow on Instagram"></a>
-    <a href="https://buttondown.com/legesher">
-        <img src="https://img.shields.io/badge/-Subscribe-black?style=flat-square&logo=minutemailer&logoColor=7ed2e7"
-            alt="Subscribe on Buttondown"></a>
-    <a href="https://www.linkedin.com/company/legesher/">
-        <img src="https://img.shields.io/badge/-Network-black?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjN2VkMmU3IiBkPSJNMjAuNDQ3IDIwLjQ1MmgtMy41NTR2LTUuNTY5YzAtMS4zMjgtLjAyNy0zLjAzNy0xLjg1Mi0zLjAzNy0xLjg1MyAwLTIuMTM2IDEuNDQ1LTIuMTM2IDIuOTM5djUuNjY3SDkuMzUxVjloMy40MTR2MS41NjFoLjA0NmMuNDc3LS45IDEuNjM3LTEuODUgMy4zNy0xLjg1IDMuNjAxIDAgNC4yNjcgMi4zNyA0LjI2NyA1LjQ1NXY2LjI4NnpNNS4zMzcgNy40MzNjLTEuMTQ0IDAtMi4wNjMtLjkyNi0yLjA2My0yLjA2NSAwLTEuMTM4LjkyLTIuMDYzIDIuMDYzLTIuMDYzIDEuMTQgMCAyLjA2NC45MjUgMi4wNjQgMi4wNjMgMCAxLjEzOS0uOTI1IDIuMDY1LTIuMDY0IDIuMDY1em0xLjc4MiAxMy4wMTlIMy41NTVWOWY5aDMuNTY0djExLjQ1MnpNMjIuMjI1IDBIMS43NzFDLjc5MiAwIDAgLjc3NCAwIDEuNzI5djIwLjU0MkMwIDIzLjIyNy43OTIgMjQgMS43NzEgMjRoMjAuNDUxQzIzLjIgMjQgMjQgMjMuMjI3IDI0IDIyLjI3MVYxLjcyOUMyNCAuNzc0IDIzLjIgMCAyMi4yMjIgMGguMDAzeiIvPjwvc3ZnPg==&logoColor=7ed2e7"
-            alt="Connect on LinkedIn"></a>
-<!-- SOCIAL MEDIA -->
+    <a href="https://x.com/legesherio">
+        <img src="https://img.shields.io/badge/-Follow-black?style=flat-square&logo=x&logoColor=7ed2e7"
+            alt="Follow on X"></a>
+</p>
 
 # Background
 
