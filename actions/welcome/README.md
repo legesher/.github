@@ -13,12 +13,14 @@ adds its own sections, so people can see what that repository is about and where
 | A pull request is merged | The celebration | A shorter thank you |
 | A pull request is closed without merging | A kind note and an invitation to keep going | The same |
 
-"First time" means nothing from them in this repository yet. Someone who has contributed
-elsewhere in Legesher but is new to this repository is welcomed back to Legesher and to the
+"Coming back" means an earlier issue or pull request in this repository for an issue, an earlier
+pull request for a pull request, and an earlier merged pull request for a merge. Someone who has
+contributed elsewhere in Legesher but is new here is welcomed back to Legesher and to the
 repository, with the full guide open.
 
 Nothing is posted for bots, for people with write access to the repository, or for a pull request
-its author closes. Each message is posted once per thread.
+its author closes. Each message is posted once per thread. If a lookup or a section can't be
+read, the person still gets their welcome: the first-time version, without that section.
 
 ## Using it in a repository
 
@@ -62,7 +64,9 @@ optional; a missing file simply leaves that part out.
 | `forms/<tag>.md` | In the issue guide, for issues opened from a form whose title starts with `[<Tag>]:`. `[New Language]:` reads `forms/new-language.md` |
 
 Sections are read from the repository's default branch, so a pull request can't change the
-message it receives. They may use `{{user}}`, `{{owner}}` and `{{repo}}`.
+message it receives. They may use `{{user}}`, `{{owner}}` and `{{repo}}`; anything else in
+double braces is posted as written. Keep each paragraph on one line: in a comment, a line break
+shows as a break.
 
 ## Changing the wording
 

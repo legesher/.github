@@ -20,11 +20,14 @@ function linksIn(text) {
   return [...text.matchAll(LINK)].map((match) => match[1]);
 }
 
+const HEADERS = { 'user-agent': 'legesher-welcome-link-check' };
+
+// A 429 means the host is throttling us, not that the page is gone.
 async function resolves(url) {
   for (const method of ['HEAD', 'GET']) {
     try {
-      const response = await fetch(url, { method, redirect: 'follow' });
-      if (response.ok) return true;
+      const response = await fetch(url, { method, redirect: 'follow', headers: HEADERS, signal: AbortSignal.timeout(20000) });
+      if (response.ok || response.status === 429) return true;
       if (method === 'GET') return false;
     } catch {
       if (method === 'GET') return false;

@@ -48,7 +48,8 @@ function messageKind(eventName, payload) {
     if (action === 'opened' && payload.issue && !payload.issue.pull_request) return 'issue';
     return null;
   }
-  if ((eventName === 'pull_request_target' || eventName === 'pull_request') && payload.pull_request) {
+  // Only pull_request_target can comment on pull requests from forks.
+  if (eventName === 'pull_request_target' && payload.pull_request) {
     if (action === 'opened') return 'pull-request';
     if (action === 'closed') return payload.pull_request.merged ? 'merged' : 'closed';
   }
@@ -69,24 +70,26 @@ function readMessage(name) {
   return fs.readFileSync(path.join(MESSAGES_DIR, `${name}.md`), 'utf8').trim();
 }
 
-function fill(template, vars) {
+// The shared wording is strict: an unknown placeholder there is a bug the tests catch.
+// A repository's own section is lenient, because it may quote template syntax such
+// as {{ name }}; anything that isn't one of our placeholders is posted as written.
+function fill(template, vars, { strict = true } = {}) {
   return template.replace(/\{\{\s*([a-z_]+)\s*\}\}/g, (whole, name) => {
-    if (!Object.prototype.hasOwnProperty.call(vars, name)) {
-      throw new Error(`Unknown placeholder ${whole}`);
-    }
-    return vars[name];
+    if (Object.prototype.hasOwnProperty.call(vars, name)) return vars[name];
+    if (strict) throw new Error(`Unknown placeholder ${whole}`);
+    return whole;
   });
 }
 
 // Empty sections leave blank runs behind; fold them so the comment reads cleanly.
 function tidy(text) {
-  return text.replace(/[ \t]+$/gm, '').replace(/\n{3,}/g, '\n\n').trim();
+  return text.replace(/\n[ \t]*\n(?:[ \t]*\n)+/g, '\n\n').trim();
 }
 
 function compose({ kind, standing, user, owner, repo, sections = {} }) {
   if (!STANDINGS.includes(standing)) throw new Error(`Unknown standing ${standing}`);
   const basic = { user, owner, repo };
-  const section = (text) => (text ? fill(text, basic) : '');
+  const section = (text) => (text ? fill(text, basic, { strict: false }) : '');
   const vars = {
     ...basic,
     repo_section: section(sections.repo),
@@ -112,14 +115,17 @@ function compose({ kind, standing, user, owner, repo, sections = {} }) {
   return `${tidy(fill(template, vars))}\n\n${marker(kind)}\n`;
 }
 
-async function readSection(github, { owner, repo, ref, filePath }) {
+// A missing section is normal. A section that can't be read is left out with a
+// warning, so the person still gets the rest of their welcome.
+async function readSection(github, { owner, repo, ref, filePath, core }) {
   try {
     const { data } = await github.rest.repos.getContent({ owner, repo, path: filePath, ref });
-    if (Array.isArray(data) || data.type !== 'file' || typeof data.content !== 'string') return '';
-    return Buffer.from(data.content, data.encoding || 'base64').toString('utf8').trim();
+    if (Array.isArray(data) || data.type !== 'file' || data.encoding !== 'base64') return '';
+    return Buffer.from(data.content || '', 'base64').toString('utf8').trim();
   } catch (error) {
     if (error && error.status === 404) return '';
-    throw error;
+    if (core) core.warning(`Could not read ${filePath} (${error.message}); leaving it out.`);
+    return '';
   }
 }
 
@@ -138,28 +144,36 @@ async function searchCount(github, q, { owner, repo, number }) {
   ).length;
 }
 
-// first: nothing from them anywhere in the org before this.
-// new-to-repo: they've been here in another Legesher repository.
-// returning: they've opened an issue or pull request in this one before.
-// For merges, returning means an earlier merged pull request in this repository.
-// A lookup that fails falls back to first, so nobody misses the full guide.
+// Everything they've opened in this repository except this thread. The issues
+// list carries pull requests too, with their merge time, and unlike search it
+// has no indexing delay.
+async function earlierHere(github, { owner, repo, login, number }) {
+  const items = await github.paginate(github.rest.issues.listForRepo, {
+    owner, repo, creator: login, state: 'all', per_page: 100,
+  });
+  return items.filter((item) => item.number !== number);
+}
+
+// For issues, coming back means any earlier issue or pull request here. For
+// pull requests, it means an earlier pull request here, and for merges an earlier
+// merged one, so nobody is thanked for "another" of something they've never done.
+// Someone with no such history here but with some elsewhere in the org is
+// new-to-repo. A lookup that fails falls back to first, so nobody misses the full guide.
 async function standingOf(github, { kind, owner, repo, login, number, core }) {
   try {
-    if (kind === 'merged') {
-      const earlier = await searchCount(
-        github, `repo:${owner}/${repo} is:pr is:merged author:${login}`, { owner, repo, number },
-      );
-      return earlier > 0 ? 'returning' : 'first';
-    }
     if (kind === 'closed') return 'first';
+    const earlier = await earlierHere(github, { owner, repo, login, number });
 
-    const { data } = await github.rest.issues.listForRepo({
-      owner, repo, creator: login, state: 'all', per_page: 5,
-    });
-    if (data.some((item) => item.number !== number)) return 'returning';
+    if (kind === 'merged') {
+      const merged = earlier.some((item) => item.pull_request && item.pull_request.merged_at);
+      return merged ? 'returning' : 'first';
+    }
+    const counts = kind === 'issue' ? () => true : (item) => Boolean(item.pull_request);
+    if (earlier.some(counts)) return 'returning';
 
     // Search wants the type spelled out, so issues and pull requests are two queries.
-    for (const type of ['is:issue', 'is:pr']) {
+    const types = kind === 'issue' ? ['is:issue', 'is:pr'] : ['is:pr'];
+    for (const type of types) {
       const elsewhere = await searchCount(
         github, `org:${owner} ${type} author:${login}`, { owner, repo, number },
       );
@@ -206,7 +220,7 @@ async function run({ github, context, core, sectionsPath = '.github/welcome' }) 
   const standing = await standingOf(github, { kind, owner, repo, login, number, core });
 
   const ref = (context.payload.repository && context.payload.repository.default_branch) || undefined;
-  const read = (name) => readSection(github, { owner, repo, ref, filePath: `${sectionsPath}/${name}` });
+  const read = (name) => readSection(github, { owner, repo, ref, filePath: `${sectionsPath}/${name}`, core });
   const sections = { repo: await read(SECTION_FILE[kind]) };
   if (kind === 'issue' || kind === 'pull-request') sections.links = await read('links.md');
   if (kind === 'issue') {

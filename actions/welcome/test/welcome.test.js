@@ -25,7 +25,7 @@ const UNICODE_SAMPLES = {
 // ---------------------------------------------------------------------------
 // A stand-in for the Octokit client github-script hands us.
 
-function fakeGithub({ comments = [], repoItems = [], search = {}, files = {}, searchError } = {}) {
+function fakeGithub({ comments = [], repoItems = [], search = {}, files = {}, searchError, contentError } = {}) {
   const calls = { created: [], contentPaths: [], searches: [], refs: [] };
   const listComments = async () => ({ data: comments });
   const github = {
@@ -50,6 +50,8 @@ function fakeGithub({ comments = [], repoItems = [], search = {}, files = {}, se
         getContent: async ({ path: filePath, ref }) => {
           calls.contentPaths.push(filePath);
           calls.refs.push(ref);
+          if (contentError) throw contentError;
+          if (files[filePath] && typeof files[filePath] === 'object') return { data: files[filePath] };
           if (!(filePath in files)) {
             const error = new Error('Not Found');
             error.status = 404;
@@ -71,7 +73,11 @@ function fakeCore() {
 }
 
 const REPO = { owner: 'legesher', repo: 'language-packs' };
-const repoItem = (number) => ({ number, repository_url: 'https://api.github.com/repos/legesher/language-packs' });
+const repoItem = (number, pull) => ({
+  number,
+  repository_url: 'https://api.github.com/repos/legesher/language-packs',
+  ...(pull ? { pull_request: { merged_at: pull === 'merged' ? '2026-10-01T00:00:00Z' : null } } : {}),
+});
 
 function issueContext({ login = 'amara', association = 'NONE', title = '[Option]: def in Swahili', type = 'User' } = {}) {
   return {
@@ -112,6 +118,8 @@ test('messageKind maps each event to its message', () => {
   assert.equal(welcome.messageKind('pull_request_target', pr('closed', false)), 'closed');
   assert.equal(welcome.messageKind('pull_request_target', pr('synchronize', false)), null);
   assert.equal(welcome.messageKind('push', {}), null);
+  // pull_request gets a read-only token on forks, so it can't comment; only pull_request_target can.
+  assert.equal(welcome.messageKind('pull_request', pr('opened', false)), null);
 });
 
 test('bots and the team are recognised', () => {
@@ -234,11 +242,21 @@ test('a repository can replace the default links, and sections may use the place
   assert.doesNotMatch(body, /COMMUNITY_GUIDELINES/);
 });
 
-test('a typo in a repository section fails loudly instead of posting a broken comment', () => {
-  assert.throws(
-    () => welcome.compose({ ...base, kind: 'issue', standing: 'first', sections: { repo: 'Hi {{usr}}' } }),
-    /Unknown placeholder \{\{usr\}\}/,
-  );
+test('a repository section may quote template syntax; only our placeholders are filled', () => {
+  const body = welcome.compose({
+    ...base, kind: 'issue', standing: 'first',
+    sections: { repo: 'Hi {{user}}, Jinja looks like `{{ name }}`.' },
+  });
+  assert.match(body, /Hi amara, Jinja looks like `\{\{ name \}\}`\./);
+});
+
+test('the shared wording stays strict about placeholders', () => {
+  assert.throws(() => welcome.fill('Hi {{usr}}', { user: 'amara' }), /Unknown placeholder \{\{usr\}\}/);
+});
+
+test('a section keeps its own trailing-space line breaks', () => {
+  const body = welcome.compose({ ...base, kind: 'merged', standing: 'first', sections: { repo: 'Line one  \nLine two' } });
+  assert.ok(body.includes('Line one  \nLine two'));
 });
 
 for (const [script, sample] of Object.entries(UNICODE_SAMPLES)) {
@@ -322,12 +340,45 @@ test('a pull request its author closes gets no message; one a maintainer closes 
 });
 
 test('a merge after earlier merges says thank you again; a first merge celebrates', async () => {
-  const again = fakeGithub({ search: { 'is:merged': [{ number: 2, repository_url: 'https://api.github.com/repos/legesher/language-packs' }] } });
-  assert.match(await welcome.run({ github: again, context: pullContext({ action: 'closed', merged: true }), core: fakeCore() }), /^Merged! 🎉/);
+  const merged = pullContext({ action: 'closed', merged: true });
+  const again = fakeGithub({ repoItems: [repoItem(7, 'merged'), repoItem(2, 'merged')] });
+  assert.match(await welcome.run({ github: again, context: merged, core: fakeCore() }), /^Merged! 🎉/);
 
-  const first = fakeGithub({ search: { 'is:merged': [{ number: 7, repository_url: 'https://api.github.com/repos/legesher/language-packs' }] } });
-  const body = await welcome.run({ github: first, context: pullContext({ action: 'closed', merged: true }), core: fakeCore() });
-  assert.match(body, /We want to celebrate you\./, 'the merge being welcomed must not count as an earlier merge');
+  // The merge being welcomed, an open pull request and an issue are not earlier merges.
+  const first = fakeGithub({ repoItems: [repoItem(7, 'merged'), repoItem(5, 'open'), repoItem(3)] });
+  const body = await welcome.run({ github: first, context: merged, core: fakeCore() });
+  assert.match(body, /We want to celebrate you\./);
+});
+
+test('a first pull request from someone who has only opened issues here is a first pull request', async () => {
+  const github = fakeGithub({ repoItems: [repoItem(7, 'open'), repoItem(3)] });
+  const body = await welcome.run({ github, context: pullContext(), core: fakeCore() });
+  assert.match(body, /thank you so much for opening your first pull request here/);
+  assert.doesNotMatch(body, /another pull request/);
+  assert.ok(github.calls.searches.every((q) => q.includes('is:pr')), 'an issue elsewhere is not an earlier pull request');
+});
+
+test('a pull request after an earlier pull request here is welcomed back', async () => {
+  const github = fakeGithub({ repoItems: [repoItem(7, 'open'), repoItem(4, 'open')] });
+  assert.match(await welcome.run({ github, context: pullContext(), core: fakeCore() }), /another pull request/);
+});
+
+test('a section that cannot be read is left out, and the welcome still posts', async () => {
+  const unavailable = Object.assign(new Error('Bad Gateway'), { status: 502 });
+  const github = fakeGithub({ repoItems: [repoItem(42)], contentError: unavailable });
+  const core = fakeCore();
+  const body = await welcome.run({ github, context: issueContext(), core });
+  assert.equal(github.calls.created.length, 1);
+  assert.match(body, /### What happens next/);
+  assert.match(core.log.warning.join('\n'), /Bad Gateway/);
+});
+
+test('a section too large for the contents API is left out', async () => {
+  const github = fakeGithub({ files: { '.github/welcome/issue.md': { type: 'file', encoding: 'none', content: '' } } });
+  const core = fakeCore();
+  const text = await welcome.readSection(github, { owner: 'legesher', repo: 'language-packs', ref: 'main', filePath: '.github/welcome/issue.md', core });
+  assert.equal(text, '');
+  assert.deepEqual(core.log.warning, [], 'a file the API will not inline is expected, not an error');
 });
 
 test('a failed lookup falls back to the first-time message and says why', async () => {
