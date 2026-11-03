@@ -1,0 +1,27 @@
+name: Legesher welcome
+description: Welcomes everyone who opens an issue or pull request, and celebrates their merges.
+author: Legesher
+
+inputs:
+  github-token:
+    description: Token that reads the thread and posts the comment. Needs issues and pull-requests write.
+    required: false
+    default: ${{ github.token }}
+  sections-path:
+    description: Folder in the calling repository that holds its own sections.
+    required: false
+    default: .github/welcome
+
+runs:
+  using: composite
+  steps:
+    - name: Post the welcome
+      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+      env:
+        WELCOME_ACTION_PATH: ${{ github.action_path }}
+        WELCOME_SECTIONS_PATH: ${{ inputs.sections-path }}
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const { run } = require(`${process.env.WELCOME_ACTION_PATH}/welcome.js`);
+          await run({ github, context, core, sectionsPath: process.env.WELCOME_SECTIONS_PATH });

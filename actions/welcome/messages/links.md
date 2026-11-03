@@ -1,0 +1,3 @@
+- [Ways to contribute](https://github.com/legesher/legesher/blob/main/CONTRIBUTING.md#ways-to-contribute) · [Community Guidelines](https://github.com/legesher/legesher/blob/main/COMMUNITY_GUIDELINES.md) · [Code of Conduct](https://github.com/legesher/legesher/blob/main/CODE_OF_CONDUCT.md)
+- [AI-assisted contributions](https://github.com/legesher/legesher/blob/main/AI_CONTRIBUTIONS.md): AI help is welcome when you say so
+- [Your contributions and your data](https://github.com/legesher/legesher/blob/main/CONTRIBUTOR_PRIVACY.md): how you're credited and how to withdraw
